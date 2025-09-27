@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aqua Park — Toko Online</title>
+  <style>
+    :root{
+      --bg:#e0f7fa; --card:#ffffff; --accent:#00bcd4; --muted:#546e7a;
+    }
+    *{box-sizing:border-box}
+    body{font-family:'Poppins',system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;margin:0;background:var(--bg);color:#111;overflow-x:hidden}
+    header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:linear-gradient(90deg,#00bcd4,#26c6da);box-shadow:0 2px 6px rgba(0,0,0,0.08);animation:slideDown 1s ease}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffffff,#00acc1);display:flex;align-items:center;justify-content:center;color:#006064;font-weight:700;font-size:20px;box-shadow:0 0 10px rgba(255,255,255,0.6);animation:float 3s ease-in-out infinite}
+    .search{flex:1;margin:0 18px;max-width:520px;animation:fadeIn 1s ease}
+    .search input{width:100%;padding:10px 14px;border-radius:30px;border:1px solid #b2ebf2;background:#fff}
+    .icons{display:flex;gap:12px;align-items:center}
+    .btn{background:var(--accent);color:#fff;padding:8px 16px;border-radius:30px;border:none;cursor:pointer;transition:transform .3s ease}
+    .btn:hover{transform:scale(1.05)}
+
+    main{padding:22px;max-width:1200px;margin:20px auto;display:grid;grid-template-columns:1fr 340px;gap:20px;animation:fadeIn 1s ease}
+    .products{background:transparent;padding:8px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;opacity:0;animation:fadeInGrid .6s forwards}
+    .card{background:var(--card);padding:14px;border-radius:20px;box-shadow:0 8px 20px rgba(0,188,212,0.08);display:flex;flex-direction:column;gap:10px;transition:transform .3s ease, box-shadow .3s ease;animation:popIn .6s ease}
+    .card:hover{transform:translateY(-5px);box-shadow:0 12px 25px rgba(0,188,212,0.12)}
+    .img{height:150px;border-radius:14px;background:linear-gradient(135deg,#b2ebf2,#e0f7fa);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);font-size:48px;animation:float 4s ease-in-out infinite}
+    .title{font-weight:600;font-size:16px}
+    .price{font-weight:700;color:var(--accent);font-size:15px}
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+
+    .pagination{display:flex;justify-content:center;gap:10px;margin-top:20px;align-items:center}
+    .pagination button{padding:8px 14px;border-radius:30px;border:1px solid #b2ebf2;background:#fff;cursor:pointer}
+    .page-info{color:var(--muted);font-size:14px}
+
+    aside.cart{background:linear-gradient(180deg,#ffffff,#e0f7fa);padding:20px;border-radius:20px;height:fit-content;box-shadow:0 8px 20px rgba(0,188,212,0.08);animation:slideUp 1s ease}
+    .cart h3{margin:0 0 8px 0}
+    .cart-list{display:flex;flex-direction:column;gap:12px;max-height:200px;overflow:auto;padding-right:6px}
+    .cart-item{display:flex;gap:10px;align-items:center}
+    .cart-item .thumb{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#b2ebf2,#e0f7fa);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:28px}
+    .qty{display:flex;gap:6px;align-items:center}
+    .qty button{padding:6px 8px;border-radius:8px;border:1px solid #b2ebf2;background:#fff;cursor:pointer}
+    .checkout{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+    .order-info label{font-size:13px;color:var(--muted)}
+    .order-info input,.order-info textarea{width:100%;padding:6px 8px;border:1px solid #b2ebf2;border-radius:8px;font-size:13px;margin-bottom:6px;resize:vertical}
+
+    footer{padding:16px;text-align:center;color:var(--muted);font-size:14px}
+
+    @keyframes float {0%{transform:translateY(0px)}50%{transform:translateY(-5px)}100%{transform:translateY(0px)}}
+    @keyframes slideDown {from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+    @keyframes slideUp {from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+    @keyframes fadeIn {from{opacity:0}to{opacity:1}}
+    @keyframes popIn {0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
+    @keyframes fadeInGrid {to{opacity:1}}
+
+    @media (max-width:900px){main{grid-template-columns:1fr; padding:12px} .search{max-width:none}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">💧</div>
+      <div>
+        <div style="font-weight:700;font-size:20px;color:#fff">Harjono Aqua Park</div>
+        <div style="font-size:12px;color:#e0f7fa">Toko Online Kolam Renang</div>
+      </div>
+    </div>
+    <div class="search">
+      <input id="q" placeholder="Cari produk air, pelampung, tiket..." />
+    </div>
+    <div class="icons">
+      <div style="color:#e0f7fa;font-size:14px">Pengiriman: <strong>Seluruh Indonesia</strong></div>
+      <button id="openCart" class="btn">Keranjang (<span id="count">0</span>)</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="products">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h2>Produk</h2>
+        <div style="color:var(--muted);font-size:14px">Menampilkan <span id="resultCount">0</span> produk</div>
+      </div>
+      <div class="grid" id="productGrid"></div>
+      <div class="pagination">
+        <button id="prevPage">Sebelumnya</button>
+        <div class="page-info" id="pageInfo">Halaman 1</div>
+        <button id="nextPage">Berikutnya</button>
+      </div>
+    </section>
+
+    <aside class="cart" id="cartPane">
+      <h3>Keranjang</h3>
+      <div class="cart-list" id="cartList"><div style="color:var(--muted)">Keranjang kosong</div></div>
+
+      <div class="order-info">
+        <label for="customerName">Nama Pemesan:</label>
+        <input type="text" id="customerName" placeholder="Nama lengkap">
+        <label for="customerAddress">Alamat Lengkap:</label>
+        <textarea id="customerAddress" rows="3" placeholder="Alamat pengiriman"></textarea>
+        <label for="customerPhone">Nomor HP/WA:</label>
+        <input type="text" id="customerPhone" placeholder="08xxxxxxxxxx">
+      </div>
+
+      <label style="font-size:13px;margin-top:8px;color:var(--muted)">Pilih Metode Pembayaran:</label>
+      <div style="display:flex;gap:10px;margin-top:5px;flex-wrap:wrap;font-size:13px">
+        <label><input type="radio" name="paymentMethod" value="Transfer Bank" checked> Bank Transfer</label>
+        <label><input type="radio" name="paymentMethod" value="BCA"> BCA</label>
+        <label><input type="radio" name="paymentMethod" value="Mandiri"> Mandiri</label>
+        <label><input type="radio" name="paymentMethod" value="BNI"> BNI</label>
+        <label><input type="radio" name="paymentMethod" value="BRI"> BRI</label>
+        <label><input type="radio" name="paymentMethod" value="OVO"> OVO</label>
+        <label><input type="radio" name="paymentMethod" value="GoPay"> GoPay</label>
+        <label><input type="radio" name="paymentMethod" value="ShopeePay"> ShopeePay</label>
+      </div>
+
+      <div class="checkout">
+        <div style="display:flex;justify-content:space-between;margin-top:10px">
+          <div>Subtotal</div><div id="subtotal">Rp 0</div>
+        </div>
+        <button id="clearCart" style="background:#f3f4f6;border:none;padding:8px;border-radius:30px;cursor:pointer;margin-top:8px">Kosongkan</button>
+        <button id="checkoutBtn" class="btn">Checkout</button>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    &copy; 2025 Aqua Park — Toko Online Kolam Renang.
+    <br>Hubungi kami via WA/Telp:
+    <br><a href="https://wa.me/+6281284366544" target="_blank" style="display:inline-block;margin-top:6px;padding:8px 14px;background:#00bcd4;color:#fff;border-radius:30px;text-decoration:none">Chat WhatsApp</a>
+    <div class="contact-block">
+      <p>Email: <a href="mailto:info@harjonoaquapark.com">info@harjonoaquapark.com</a></p>
+      <p>Jam operasional: Senin – Minggu, 08.00 – 17.00 WIB</p>
+      <p>Alamat: Jl. Kolam Renang No.123, Surakarta, Jawa Tengah, Indonesia</p>
+    </div>
+  </footer>
+
+<script>
+const PRODUCTS = [
+  {id:1, title:'Pelampung Anak', price:75000, img:'🛟', desc:'Pelampung anak motif lucu untuk berenang'},
+  {id:2, title:'Tiket Masuk Harjono Aqua Park', price:50000, img:'🎫', desc:'Tiket masuk wahana kolam renang dan permainan air'},
+  {id:3, title:'Goggles Premium', price:95000, img:'🥽', desc:'Kacamata renang premium anti fog'},
+  {id:4, title:'Ban Renang Dewasa', price:120000, img:'💦', desc:'Ban renang ukuran besar untuk dewasa'},
+  {id:5, title:'Handuk Microfiber', price:45000, img:'🧴', desc:'Handuk ringan cepat kering'},
+  {id:6, title:'Minuman Dingin', price:15000, img:'🥤', desc:'Minuman segar dingin setelah berenang'},
+  {id:7, title:'Snack Ringan', price:20000, img:'🍿', desc:'Camilan ringan untuk mengisi energi'},
+  {id:8, title:'Topi Renang', price:30000, img:'🧢', desc:'Topi renang elastis nyaman dipakai'},
+  {id:9, title:'Kacamata Renang Anak', price:60000, img:'👓', desc:'Kacamata renang khusus anak-anak'},
+  {id:10, title:'Pelampung Dewasa', price:100000, img:'🛟', desc:'Pelampung dewasa'},
+  {id:11, title:'Sunblock Lotion', price:40000, img:'🧴', desc:'Lotion pelindung kulit dari sinar UV'},
+  {id:12, title:'Tiket Fast Track', price:80000, img:'🎟️', desc:'Tiket masuk jalur cepat tanpa antrean'},
+  {id:13, title:'Kursi Santai', price:150000, img:'🪑', desc:'Kursi santai di tepi kolam renang'},
+  {id:14, title:'Payung Pantai', price:90000, img:'⛱️', desc:'Payung besar untuk berteduh'},
+  {id:15, title:'Paket Keluarga', price:250000, img:'👨‍👩‍👧‍👦', desc:'Paket tiket masuk untuk 4 orang'},
+  {id:16, title:'Kamera Tahan Air', price:300000, img:'📸', desc:'Kamera digital tahan air untuk mengabadikan momen'},
+  {id:17, title:'Pelampung Bayi', price:50000, img:'🛟', desc:'Pelampung khusus bayi dengan desain aman'},
+  {id:18, title:'Tiket Musim Liburan', price:60000, img:'🎫', desc:'Tiket masuk khusus musim liburan'},
+  {id:19, title:'Ban Renang Anak', price:80000, img:'💦', desc:'Ban renang ukuran kecil untuk anak-anak'},
+  {id:20, title:'Handuk Pantai', price:55000, img:'🧴', desc:'Handuk besar motif pantai'},
+  {id:21, title:'Minuman Energi', price:20000, img:'🥤', desc:'Minuman energi untuk stamina'},
+  {id:22, title:'Snack Sehat', price:25000, img:'🍿', desc:'Camilan sehat rendah gula'},
+  {id:23, title:'Topi Pantai', price:40000, img:'🧢', desc:'Topi lebar untuk melindungi dari matahari'},
+  {id:24, title:'Kacamata Hitam', price:120000, img:'👓', desc:'Kacamata hitam stylish UV protection'},
+  {id:25, title:'Pelampung Ring', price:110000, img:'🛟', desc:'Pelampung berbentuk ring untuk dewasa'},
+];
+
+const rupiah = (n)=> 'Rp ' + Number(n).toLocaleString('id-ID');
+let cart = {};
+const grid = document.getElementById('productGrid');
+const countEl = document.getElementById('count');
+const cartList = document.getElementById('cartList');
+const subtotalEl = document.getElementById('subtotal');
+const resultCount = document.getElementById('resultCount');
+const q = document.getElementById('q');
+const openCartBtn = document.getElementById('openCart');
+const cartPane = document.getElementById('cartPane');
+const pageInfo = document.getElementById('pageInfo');
+
+// pagination
+let currentPage = 1;
+const perPage = 6;
+let filteredProducts = PRODUCTS;
+
+function renderProducts(list){
+  grid.style.opacity = '0';
+  setTimeout(()=>{
+    grid.innerHTML = '';
+    resultCount.textContent = list.length;
+    const start = (currentPage-1)*perPage;
+    const paginated = list.slice(start, start+perPage);
+    paginated.forEach(p => {
+      const card = document.createElement('div'); card.className='card';
+      card.innerHTML = `
+        <div class="img">${p.img}</div>
+        <div style="flex:1">
+          <div class="title">${p.title}</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:6px">${p.desc}</div>
+        </div>
+        <div class="meta">
+          <div class="price">${rupiah(p.price)}</div>
+          <div>
+            <button class="btn add" data-id="${p.id}">Tambah</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    pageInfo.textContent = `Halaman ${currentPage}`;
+    grid.style.opacity = '1';
+  },200);
+}
+
+function saveCart(){ localStorage.setItem('demo_cart_aqua', JSON.stringify(cart)); }
+function loadCart(){ try{ cart = JSON.parse(localStorage.getItem('demo_cart_aqua'))||{} }catch(e){cart={}}; }
+
+function updateCartUI(){
+  const items = Object.keys(cart).map(id=>{
+    const p = PRODUCTS.find(x=>x.id==id);
+    return {...p, qty:cart[id]};
+  });
+  countEl.textContent = items.reduce((s,i)=>s+i.qty,0);
+  cartList.innerHTML = '';
+  if(items.length===0){ cartList.innerHTML = '<div style="color:var(--muted)">Keranjang kosong</div>'; }
+  else{
+    items.forEach(it=>{
+      const el = document.createElement('div'); el.className='cart-item';
+      el.innerHTML = `
+        <div class="thumb">${it.img}</div>
+        <div style="flex:1">
+          <div style="font-weight:600">${it.title}</div>
+          <div style="font-size:13px;color:var(--muted)">${rupiah(it.price)} x ${it.qty}</div>
+        </div>
+        <div class="qty">
+          <button data-id="${it.id}" class="dec">-</button>
+          <div style="min-width:22px;text-align:center">${it.qty}</div>
+          <button data-id="${it.id}" class="inc">+</button>
+        </div>
+      `;
+      cartList.appendChild(el);
+    });
+  }
+  const subtotal = items.reduce((s,i)=>s + i.price*i.qty,0);
+  subtotalEl.textContent = rupiah(subtotal);
+}
+
+function addToCart(id, qty=1){ id = String(id); cart[id] = (cart[id]||0) + qty; saveCart(); updateCartUI(); }
+function changeQty(id, delta){ id = String(id); if(!cart[id]) return; cart[id] += delta; if(cart[id] <=0) delete cart[id]; saveCart(); updateCartUI(); }
+
+document.addEventListener('click', e=>{
+  if(e.target.matches('.add')){ addToCart(e.target.dataset.id,1); }
+  if(e.target.matches('.inc')){ changeQty(e.target.dataset.id,1); }
+  if(e.target.matches('.dec')){ changeQty(e.target.dataset.id,-1); }
+  if(e.target.id==='clearCart'){ if(confirm('Kosongkan keranjang?')){ cart={}; saveCart(); updateCartUI(); } }
+
+  // Checkout + WA
+  if(e.target.id==='checkoutBtn'){
+    const items = Object.keys(cart);
+    if(items.length===0){ alert('Keranjang kosong. Tambah produk terlebih dahulu.'); return; }
+    const name = document.getElementById('customerName').value.trim();
+    const addr = document.getElementById('customerAddress').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+    const pay = document.querySelector('input[name="paymentMethod"]:checked').value;
+    if(!name || !addr || !phone){ alert('Mohon lengkapi Nama, Alamat, dan Nomor HP!'); return; }
+
+    // Buat pesan WA
+    let msg = `Halo Harjono Aqua Park,%0ANama: ${name}%0AAlamat: ${addr}%0ANo HP: ${phone}%0AMetode Pembayaran: ${pay}%0A%0ADaftar Pesanan:%0A`;
+    Object.keys(cart).forEach(id=>{
+      const p = PRODUCTS.find(x=>x.id==id);
+      msg += `- ${p.title} (${cart[id]} x ${rupiah(p.price)}) = ${rupiah(p.price*cart[id])}%0A`;
+    });
+    const total = Object.keys(cart).reduce((s,id)=>{const p = PRODUCTS.find(x=>x.id==id); return s + p.price*cart[id];},0);
+    msg += `%0ATotal: ${rupiah(total)}`;
+
+    const waNumber = '+6281284366544';
+    const waURL = `https://wa.me/${waNumber.replace(/\D/g,'')}?text=${msg}`;
+    window.open(waURL,'_blank');
+
+    cart={}; saveCart(); updateCartUI();
+  }
+});
+
+q.addEventListener('input', ()=>{
+  const val = q.value.trim().toLowerCase();
+  filteredProducts = PRODUCTS.filter(p => p.title.toLowerCase().includes(val) || p.desc.toLowerCase().includes(val));
+  currentPage = 1;
+  renderProducts(filteredProducts);
+});
+
+document.getElementById('prevPage').addEventListener('click', ()=>{
+  if(currentPage>1){ currentPage--; renderProducts(filteredProducts); }
+});
+document.getElementById('nextPage').addEventListener('click', ()=>{
+  if(currentPage*perPage < filteredProducts.length){ currentPage++; renderProducts(filteredProducts); }
+});
+
+openCartBtn.addEventListener('click', ()=>{ cartPane.scrollIntoView({behavior:'smooth'}); });
+
+loadCart(); renderProducts(PRODUCTS); updateCartUI();
+</script>
+</body>
+</html>
